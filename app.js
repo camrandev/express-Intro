@@ -15,12 +15,21 @@ const MISSING = "Expected key `nums` with comma-separated list of numbers.";
 
 /** Finds mean of nums in qs: returns {operation: "mean", result } */
 app.get("/mean", function (req, res) {
+  console.log(req.query.nums)
   //potentially use gaurd statement
   //pull out the numbers using the appropriate request method
-  //req.params.nums -> string at first that we need to convert with 
+  //req.params.nums -> string at first that we need to convert with
   //perform the calculation using the calculation function in stats.js
+  const numArray = req.query.nums.split(',')
+  const numbers = convertStrNums(numArray);
+  const value = findMean(numbers);
 
-  //respond with nums
+  return res.json({
+    response: {
+      operation: "mean",
+      value,
+    }
+  })
 });
 
 /** Finds median of nums in qs: returns {operation: "median", result } */

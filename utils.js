@@ -6,7 +6,8 @@ function convertStrNums(strNums) {
   let nums = [];
 
   for (const num of strNums) {
-    if (typeof Number.parseFloat(num) != "integer") {
+    if (typeof Number.parseFloat(num) != "number" ||
+      isNaN(Number.parseFloat(num))) {
       throw new BadRequestError(`${num} is not a number`);
     }
     nums.push(Number.parseFloat(num));
@@ -17,8 +18,5 @@ function convertStrNums(strNums) {
   // if the conversion isn't successful, throw a BadRequestError and will
   // be handled in your route
 }
-
-convertStrNums(["1","2","3"])
-convertStrNums(["foo","2","3"])
 
 module.exports = { convertStrNums };
