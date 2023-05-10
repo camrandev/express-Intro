@@ -6,11 +6,11 @@ function convertStrNums(strNums) {
   let nums = [];
 
   for (const num of strNums) {
-    if (typeof Number.parseFloat(num) != "number" ||
-      isNaN(Number.parseFloat(num))) {
+    if (typeof Number(num) != "number" ||
+      isNaN(Number(num))) {
       throw new BadRequestError(`${num} is not a number`);
     }
-    nums.push(Number.parseFloat(num));
+    nums.push(Number(num));
   }
 
   return nums;

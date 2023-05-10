@@ -7,7 +7,7 @@ const { findMean, findMedian, findMode } = require("./stats.js");
 const { convertStrNums } = require("./utils.js");
 
 // useful error class to throw
-const { NotFoundError } = require("./expressError");
+const { NotFoundError, BadRequestError } = require("./expressError");
 
 app.use(express.json());
 
@@ -15,12 +15,9 @@ const MISSING = "Expected key `nums` with comma-separated list of numbers.";
 
 /** Finds mean of nums in qs: returns {operation: "mean", result } */
 app.get("/mean", function (req, res) {
-  console.log(req.query.nums)
-  //potentially use gaurd statement
-  //pull out the numbers using the appropriate request method
-  //req.params.nums -> string at first that we need to convert with
-  //perform the calculation using the calculation function in stats.js
-  const numArray = req.query.nums.split(',')
+  if (!req.query.nums) throw new BadRequestError(`${MISSING}`);
+
+  const numArray = req.query.nums.split(",");
   const numbers = convertStrNums(numArray);
   const value = findMean(numbers);
 
@@ -28,13 +25,41 @@ app.get("/mean", function (req, res) {
     response: {
       operation: "mean",
       value,
-    }
-  })
+    },
+  });
 });
 
 /** Finds median of nums in qs: returns {operation: "median", result } */
+app.get("/median", function (req, res) {
+  if (!req.query.nums) throw new BadRequestError(`${MISSING}`);
+
+  const numArray = req.query.nums.split(",");
+  const numbers = convertStrNums(numArray);
+  const value = findMedian(numbers);
+
+  return res.json({
+    response: {
+      operation: "median",
+      value,
+    },
+  });
+});
 
 /** Finds mode of nums in qs: returns {operation: "mean", result } */
+app.get("/mode", function (req, res) {
+  if (!req.query.nums) throw new BadRequestError(`${MISSING}`);
+
+  const numArray = req.query.nums.split(",");
+  const numbers = convertStrNums(numArray);
+  const value = findMode(numbers);
+
+  return res.json({
+    response: {
+      operation: "mode",
+      value,
+    },
+  });
+});
 
 /** 404 handler: matches unmatched routes; raises NotFoundError. */
 app.use(function (req, res) {
